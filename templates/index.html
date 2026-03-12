@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Stress Detection</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(120deg,#1e3c72,#2a5298);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.container{
+background:rgba(255,255,255,0.15);
+padding:40px;
+border-radius:20px;
+width:650px;
+text-align:center;
+backdrop-filter:blur(10px);
+box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+
+.robot img{
+width:150px;
+margin-bottom:15px;
+}
+
+video{
+width:420px;
+border-radius:10px;
+border:3px solid white;
+}
+
+button{
+margin-top:20px;
+padding:12px 30px;
+font-size:18px;
+border:none;
+border-radius:25px;
+background:#00c9ff;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#00a3cc;
+}
+
+.results{
+margin-top:20px;
+background:rgba(255,255,255,0.2);
+padding:15px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>AI Multimodal Stress Detection</h1>
+
+<div class="robot">
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+</div>
+
+<video id="video" autoplay></video>
+
+<br>
+
+<button onclick="startDetection()">Start Detection</button>
+
+<h3>You Said:</h3>
+<p id="speech">-</p>
+
+<div class="results">
+
+<p>Face Emotion: <span id="face">-</span></p>
+<p>Voice Emotion: <span id="voice">-</span></p>
+<p>Stress Level: <span id="stress">-</span></p>
+
+<p id="explanation"></p>
+
+</div>
+
+</div>
+
+<script>
+
+let video = document.getElementById("video")
+
+function startDetection(){
+
+startCamera()
+
+recordSpeech()
+
+setTimeout(predict,15000)
+
+}
+
+function startCamera(){
+
+navigator.mediaDevices.getUserMedia({video:true,audio:true})
+
+.then(function(stream){
+
+video.srcObject = stream
+
+})
+
+.catch(function(error){
+
+alert("Please allow camera and microphone")
+
+})
+
+}
+
+function recordSpeech(){
+
+var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+var recognition = new SpeechRecognition()
+
+recognition.lang = "en-US"
+
+recognition.continuous = true
+
+recognition.start()
+
+setTimeout(function(){
+
+recognition.stop()
+
+},15000)
+
+recognition.onresult = function(event){
+
+var text=""
+
+for(var i=0;i<event.results.length;i++){
+
+text += event.results[i][0].transcript + " "
+
+}
+
+document.getElementById("speech").innerText = text
+
+}
+
+}
+
+function predict(){
+
+fetch("/predict",{
+
+method:"POST"
+
+})
+
+.then(function(response){
+
+return response.json()
+
+})
+
+.then(function(data){
+
+document.getElementById("face").innerText = data.face
+document.getElementById("voice").innerText = data.voice
+document.getElementById("stress").innerText = data.stress
+
+var explain=""
+
+if(data.face=="Happy"){
+
+explain="You seem happy 😊 Keep smiling!"
+
+}
+
+else if(data.face=="Sad"){
+
+explain="I understand you may be feeling sad 💙. It's okay to feel this way. Take a deep breath and remember things will get better."
+
+}
+
+else if(data.face=="Angry"){
+
+explain="You seem frustrated. Try relaxing and taking deep breaths."
+
+}
+
+else{
+
+explain="Your expression looks neutral."
+
+}
+
+document.getElementById("explanation").innerText = explain
+
+})
+
+}
+
+</script>
+
+</body>
+
+</html>

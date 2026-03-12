@@ -1,0 +1,7 @@
+datasets/
+*.csv
+*.h5
+*.mp4
+*.wav
+__pycache__/
+*.pyc
