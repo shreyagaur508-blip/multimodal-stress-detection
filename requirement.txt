@@ -1,6 +1,9 @@
-opencv-python
-numpy
-tensorflow
-librosa
-scikit-learn
-pandas
+Flask
+OpenCV
+TensorFlow
+Keras
+NumPy
+Pandas
+Librosa
+Scikit-learn
+SpeechRecognition
