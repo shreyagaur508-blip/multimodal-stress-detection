@@ -1,9 +1,0 @@
-Flask
-OpenCV
-TensorFlow
-Keras
-NumPy
-Pandas
-Librosa
-Scikit-learn
-SpeechRecognition
