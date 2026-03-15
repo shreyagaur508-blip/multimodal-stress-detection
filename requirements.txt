@@ -1,0 +1,10 @@
+flask
+numpy
+pandas
+opencv-python
+tensorflow
+keras
+librosa
+scikit-learn
+speechrecognition
+gunicorn
